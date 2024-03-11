@@ -5,6 +5,7 @@ dotenv.config()
 import userRouter from './routes/user.router.js'
 import express from 'express'
 import dbConnection from './db/database.js'
+import authRoute from './routes/auth.route.js'
 
 const app=express()
 const PORT=process.env.PORT || 3000
@@ -16,7 +17,8 @@ app.use(express.urlencoded({extended:false}))
 
 
 // all routes here--
-app.use('/api',userRouter)
+app.use('/api/user',userRouter)
+app.use('/api/auth',authRoute)
 
 app.listen(PORT,()=>{
     dbConnection(process.env.MONGODB_URL)
