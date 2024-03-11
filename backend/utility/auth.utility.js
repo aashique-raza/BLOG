@@ -25,4 +25,11 @@ const passwordVerification = (password) => {
   return true;
 };
 
-export { hashPassword, passwordVerification };
+ const errorHandler = (statusCode, message) => {
+    const error = new Error();
+    error.statusCode = statusCode;
+    error.message = message;
+    return error;
+  };
+
+export { hashPassword, passwordVerification,errorHandler };
