@@ -1,5 +1,11 @@
 import { hashPassword, passwordVerification,errorHandler } from "../utility/auth.utility.js";
 import User from "../models/user.model.js";
+import jwt from 'jsonwebtoken'
+import bcrypt from 'bcrypt'
+
+
+
+
 
 const signup = async (req, res, next) => {
   const { username, email, password } = req.body;
@@ -48,7 +54,7 @@ const signup = async (req, res, next) => {
     const user = await newUser.save();
     if (user) {
       // Send response
-      return res.status(201).json({success:true, msg: "Signup successful", ...user._doc });
+      return res.status(201).json({success:true, msg: "Signup successful",});
     }
   } catch (error) {
     // Handle errors
@@ -59,4 +65,42 @@ const signup = async (req, res, next) => {
 };
 
 
-export { signup };
+const login=async(req,res,next)=>{
+  const{email,password}=req.body;
+
+  if(!email || !password || email=='' || password==''){
+    return res.json({success:false,msg:'all fields are required'})
+  }
+
+  try {
+    const checkUser=await User.findOne({email:email})
+
+    // check user exists or not
+    if(!checkUser){
+      return res.json({success:false,msg:'user not found'})
+    }
+
+    // verify password
+    const verifyPassword=bcrypt.compareSync(password,checkUser.password)
+
+    if(!verifyPassword){
+      return res.json({success:false,msg:'invalid password'})
+    }
+    // genrate token---
+    const token= jwt.sign({id:checkUser._id},process.env.JWT_SECRET_KEY)
+
+     // Set cookie with HTTPOnly flag
+  res.cookie('Token', token, { httpOnly: true });
+
+  const{password:pass,...userData}=checkUser._doc
+
+  res.json({success:true,msg:'login successfull',userData})
+    
+  } catch (error) {
+    console.log(`login failed ${error}`)
+    res.json({success:false,msg:'internal server error'})
+  }
+}
+
+
+export { signup,login };
