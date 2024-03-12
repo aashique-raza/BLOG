@@ -104,4 +104,20 @@ const updateUser = async (req, res) => {
   }
 };
 
-export { testApi, updateUser };
+const deleteUser = async (req, res, next) => {
+  if (req.user.id !== req.params.userId) {
+    // return next(errorHandler(403, 'You are not allowed to delete this user'));
+    return res.status(403).json({success:false,msg:'You are not allowed to delete this user'})
+  }
+  try {
+    await User.findByIdAndDelete(req.params.userId);
+    res.status(200).json({success:false,msg:'User has been deleted'});
+  } catch (error) {
+    console.log(`delete user failed ${error}`)
+    res.status(500).json({success:false,msg:'internal server error'})
+   
+    // next(error);
+  }
+};
+
+export { testApi, updateUser,deleteUser };
