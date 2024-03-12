@@ -111,7 +111,7 @@ const deleteUser = async (req, res, next) => {
   }
   try {
     await User.findByIdAndDelete(req.params.userId);
-    res.status(200).json({success:false,msg:'User has been deleted'});
+    res.status(200).json({success:true,msg:'User has been deleted'});
   } catch (error) {
     console.log(`delete user failed ${error}`)
     res.status(500).json({success:false,msg:'internal server error'})
