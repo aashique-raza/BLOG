@@ -1,9 +1,13 @@
 import bcrypt from "bcrypt";
 
 const hashPassword = (password) => {
-  const hashedPassword = bcrypt.hashSync(password, 10);
-
-  return hashedPassword;
+  try {
+    const hashedPassword = bcrypt.hashSync(password, 10);
+    return hashedPassword;
+  } catch (error) {
+    console.error('Error hashing password:', error);
+    throw error; // Rethrow the error to propagate it to the caller
+  }
 };
 
 const uppercaseRegex = /[A-Z]/;

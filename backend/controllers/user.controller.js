@@ -23,6 +23,7 @@ const updateUser = async (req, res) => {
   }
 
   try {
+    let hashedPassword;
     if (password) {
       console.log(password);
       // Validate and hash the password
@@ -33,10 +34,11 @@ const updateUser = async (req, res) => {
           msg: "Password must be at least 8 characters long and contain at least one uppercase letter, one number, and one special character.",
         });
       }
+      //   hash passwored--
+     hashedPassword = hashPassword(password);
     }
 
-    //   hash passwored--
-    const hashedPassword = hashPassword(password);
+    
     // console.log(hashedPassword)
 
     if (username) {
