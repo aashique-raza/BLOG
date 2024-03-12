@@ -1,12 +1,16 @@
 import { Alert, Button, Label, Spinner, TextInput } from 'flowbite-react';
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { loginFailiure,loginSuccess,loginStart } from '../features/userFeature/userSlice';
+import {useDispatch,useSelector} from 'react-redux'
 
 function Login() {
 
+  const dispatch=useDispatch()
+  const {error:errorMessage,loading}=useSelector((state)=>state.user)
+
   const [formData, setFormData] = useState({});
-  const [errorMessage, setErrorMessage] = useState(null);
-  const [loading, setLoading] = useState(false);
+  
   const navigate = useNavigate();
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.id]: e.target.value.trim() });
@@ -14,11 +18,14 @@ function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!formData.email || !formData.password) {
-      return setErrorMessage('Please fill out all fields.');
+      return dispatch(loginFailiure('Please fill out all fields.'))
+      
     }
     try {
-      setLoading(true);
-      setErrorMessage(null);
+    
+    
+    dispatch(loginFailiure(null))
+    dispatch(loginStart())
       const res = await fetch('/api/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -26,16 +33,17 @@ function Login() {
       });
       const data = await res.json();
       if (data.success === false) {
-        setLoading(false)
-        return setErrorMessage(data.msg);
+        return dispatch(loginFailiure(data))
+       
       }
-      setLoading(false);
+      
+      dispatch(loginSuccess(data.userData))
       if (data.success===true) {
        return navigate('/');
       }
     } catch (error) {
-      setErrorMessage(error.msg);
-      setLoading(false);
+      dispatch(loginFailiure(error))
+      
     }
   };
 
@@ -103,7 +111,7 @@ function Login() {
         </div>
         {errorMessage && (
           <Alert className='mt-5' color='failure'>
-            {errorMessage}
+            {errorMessage.msg}
           </Alert>
         )}
       </div>
