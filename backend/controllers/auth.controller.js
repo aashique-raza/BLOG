@@ -92,7 +92,7 @@ const login = async (req, res, next) => {
       return res.json({ success: false, msg: "invalid password" });
     }
     // genrate token---
-    const token = jwt.sign({ id: checkUser._id }, process.env.JWT_SECRET_KEY);
+    const token = jwt.sign({ id: checkUser._id ,isAdmin:checkUser.isAdmin}, process.env.JWT_SECRET_KEY);
 
     // Set cookie with HTTPOnly flag
     res.cookie("Token", token, { httpOnly: true });
@@ -111,7 +111,7 @@ const google = async (req, res, next) => {
   try {
     const user = await User.findOne({ email });
     if (user) {
-      const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET_KEY);
+      const token = jwt.sign({ id: user._id, isAdmin:user.isAdmin }, process.env.JWT_SECRET_KEY);
       const { password, ...userData } = user._doc;
       // Set cookie with HTTPOnly flag
       res.cookie("Token", token, { httpOnly: true });
@@ -130,7 +130,7 @@ const google = async (req, res, next) => {
         profilePicture: googlePhotoUrl,
       });
       const user=await newUser.save();
-      const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET_KEY);
+      const token = jwt.sign({ id: user._id,isAdmin:user.isAdmin }, process.env.JWT_SECRET_KEY);
       // Set cookie with HTTPOnly flag
       res.cookie("Token", token, { httpOnly: true });
       const { password, ...userData } = newUser._doc;
