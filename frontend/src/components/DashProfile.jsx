@@ -19,6 +19,7 @@ import {
     deleteUserStart,
   deleteUserSuccess,
   deleteUserFailure,
+  LogoutSuccess
   } from '../features/userFeature/userSlice';
   import { HiOutlineExclamationCircle } from 'react-icons/hi';
   
@@ -155,6 +156,22 @@ export default function DashProfile() {
     }
   };
 
+  const handleLogout = async () => {
+    try {
+      const res = await fetch('/api/user/logout', {
+        method: 'POST',
+      });
+      const data = await res.json();
+      if (data.success===false) {
+        console.log(data.msg);
+      } else {
+        dispatch(LogoutSuccess());
+      }
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
 
 
 
@@ -233,7 +250,7 @@ export default function DashProfile() {
       </form>
       <div className="text-red-500 flex justify-between mt-5">
         <span className="cursor-pointer" onClick={() => setShowModal(true)}>Delete Account</span>
-        <span className="cursor-pointer">Sign Out</span>
+        <span className="cursor-pointer" onClick={handleLogout} > Log Out</span>
       </div>
       {updateUserSuccess && (
         <Alert color='success' className='mt-5'>

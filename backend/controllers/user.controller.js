@@ -119,5 +119,17 @@ const deleteUser = async (req, res, next) => {
     // next(error);
   }
 };
+const logout = (req, res, next) => {
+  try {
+    res.clearCookie('Token')
 
-export { testApi, updateUser,deleteUser };
+    res.status(200).json({success:true,msg:'logout successfully'})
+      
+  } catch (error) {
+    res.status(500).json({success:false,msg:'internal server error'})
+    console.log(`log out failed ${error}`)
+    // next(error);
+  }
+};
+
+export { testApi, updateUser,deleteUser,logout };

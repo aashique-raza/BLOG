@@ -4,6 +4,7 @@ import { AiOutlineSearch } from 'react-icons/ai';
 import { FaMoon,FaSun } from 'react-icons/fa';
 import { useSelector,useDispatch } from 'react-redux';
 import { toggleTheme } from '../features/Theme/ThemeSlice';
+import { LogoutSuccess } from '../features/userFeature/userSlice';
 
 
  function Header() {
@@ -11,6 +12,25 @@ import { toggleTheme } from '../features/Theme/ThemeSlice';
     const path = useLocation().pathname;
     const {UserData}=useSelector((state)=>state.user)
     const { theme } = useSelector((state) => state.theme);
+    
+
+
+    const handleLogout = async () => {
+      // console.log('hii logout')
+      try {
+        const res = await fetch('/api/user/logout', {
+          method: 'POST',
+        });
+        const data = await res.json();
+        if (data.success===false) {
+          console.log(data.msg);
+        } else {
+          dispatch(LogoutSuccess());
+        }
+      } catch (error) {
+        console.log(error.message);
+      }
+    };
 
 
   return (
@@ -61,7 +81,7 @@ import { toggleTheme } from '../features/Theme/ThemeSlice';
               <Dropdown.Item>Profile</Dropdown.Item>
             </Link>
             <Dropdown.Divider />
-            <Dropdown.Item>logout</Dropdown.Item>
+            <Dropdown.Item onClick={handleLogout}>logout</Dropdown.Item>
           </Dropdown>
         ) : (
           <Link to='/login'>
