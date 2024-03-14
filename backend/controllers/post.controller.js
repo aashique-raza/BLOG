@@ -95,4 +95,17 @@ const getposts = async (req, res) => {
   }
 };
 
-export { createPost, getposts };
+const deletepost = async (req, res, next) => {
+    if (!req.user.isAdmin || req.user.id !== req.params.userId) {
+      return next(errorHandler(403, 'You are not allowed to delete this post'));
+    }
+    try {
+      await Post.findByIdAndDelete(req.params.postId);
+      res.status(200).json({success:true,msg:'The post has been deleted'});
+    } catch (error) {
+        res.status(500).json({success:false,msg:'internal server error'});
+        console.log(`delete post failed ${error}`)
+    }
+  };
+
+export { createPost, getposts,deletepost };
