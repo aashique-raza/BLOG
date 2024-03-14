@@ -12,6 +12,7 @@ import {
   ref,
   uploadBytesResumable,
 } from "firebase/storage";
+import {useNavigate} from 'react-router-dom'
 
 function CreatePost() {
 
@@ -20,6 +21,9 @@ function CreatePost() {
   const[fileProgress,setFileProgress]=useState(null)
   // const [fileUploading,setFileUploading]=useState(false)
   const [formData,setFormData]=useState({})
+  const [createPostError,setcreatePostError]=useState(null)
+  const [createPostLoading,setcreatePostLoading]=useState(false)
+  const navigate=useNavigate()
 
 
   const handleImgupload= async()=>{
@@ -68,12 +72,51 @@ function CreatePost() {
       console.log(`upload img failed ${error}`)
     }
   }
+  // console.log(formData)
+  const handleCreatePostSubmit=async(e)=>{
+    e.preventDefault()
+    // console.log('hiii')
+
+    try {
+      setcreatePostLoading(true)
+      if(!formData){
+      return  createPostError('please fill all fields')
+      }
+      setcreatePostError(null)
+      const res = await fetch('/api/post/create-post', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const result=await res.json()
+
+      if(result.success===false){
+        setcreatePostLoading(false)
+        return setcreatePostError(result.msg)
+      }
+
+      setcreatePostLoading(false)
+      setcreatePostError(null)
+      navigate(`/post/${result.savedPost.slug}`)
+
+
+
+      
+    } catch (error) {
+      createPostError('something went wrong')
+      setcreatePostLoading(false)
+      console.log(`create post failed`)
+    }
+  }
 
 
   return (
     <div className='p-3 max-w-3xl mx-auto min-h-screen'>
     <h1 className='text-center text-3xl my-7 font-semibold'>Create a post</h1>
-    <form className='flex flex-col gap-4'>
+    <form className='flex flex-col gap-4' onSubmit={handleCreatePostSubmit}>
       <div className='flex flex-col gap-4 sm:flex-row justify-between'>
         <TextInput
           type='text'
@@ -81,8 +124,9 @@ function CreatePost() {
           required
           id='title'
           className='flex-1'
+          onChange={(e)=>setFormData({...formData,title:e.target.value})}
         />
-        <Select>
+        <Select  onChange={(e)=>setFormData({...formData,category:e.target.value})}>
           <option value='uncategorized'>Select a category</option>
           <option value='javascript'>JavaScript</option>
           <option value='reactjs'>React.js</option>
@@ -127,11 +171,15 @@ function CreatePost() {
         placeholder='Write something...'
         className='h-72 mb-12 text-2xl placeholder:text-gray-100'
         required
+        onChange={(value)=>setFormData({...formData,content:value})}
       />
-      <Button type='submit' gradientDuoTone='purpleToPink'>
-        Publish
+      <Button type='submit' gradientDuoTone='purpleToPink' disabled={createPostLoading}>
+         {createPostLoading ? 'publishing...' :'Publish'}
       </Button>
     </form>
+    {
+      createPostError && <Alert color={'failure'}>{createPostError}</Alert>
+    }
   </div>
   )
 }
