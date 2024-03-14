@@ -41,6 +41,7 @@ const createPost = async (req, res) => {
     });
   } catch (error) {
     // Pass any errors to the error handling middleware
+    console.log(`creating post error ${error}`)
     res.status(500).json({ success: false, msg: "internal server error" });
     // next(error);
   }
