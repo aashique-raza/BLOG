@@ -9,6 +9,8 @@ import Header from "./components/Header";
 import FooterCom from "./components/Footer";
 import Dashboard from "./pages/Dashboard";
 import Protected from "./components/Protected";
+import CreatePost from "./pages/CreatePost";
+import ProtectedAdmin from "./components/ProtectedAdmin";
 
 function App() {
   return (
@@ -23,6 +25,9 @@ function App() {
         <Route path="/projects" element={<Projects />} />
         <Route element={<Protected />}>
           <Route path="/dashboard" element={<Dashboard />} />
+        </Route>
+        <Route element={<ProtectedAdmin />}>
+          <Route path="/create-post" element={<CreatePost />} />
         </Route>
       </Routes>
       <FooterCom />

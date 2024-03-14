@@ -3,6 +3,7 @@ import dotenv from 'dotenv'
 dotenv.config()
 
 import userRouter from './routes/user.router.js'
+import postRouter from './routes/post.route.js'
 import express from 'express'
 import dbConnection from './db/database.js'
 import cors from 'cors'
@@ -23,6 +24,7 @@ app.use(cookieParser())
 // all routes here--
 app.use('/api/user',userRouter)
 app.use('/api/auth',authRoute)
+app.use('/api/post',postRouter)
 
 app.listen(PORT,()=>{
     dbConnection(process.env.MONGODB_URL)
