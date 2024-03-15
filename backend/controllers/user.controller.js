@@ -134,7 +134,8 @@ const logout = (req, res, next) => {
 
 const getUsers = async (req, res, next) => {
   if (!req.user.isAdmin) {
-    return next(errorHandler(403, 'You are not allowed to see all users'));
+    return res.status(403).json({success:false,msg:'You are not allowed to see all users'})
+    // return next(errorHandler(403, 'You are not allowed to see all users'));
   }
   try {
     const startIndex = parseInt(req.query.startIndex) || 0;
@@ -164,13 +165,15 @@ const getUsers = async (req, res, next) => {
       createdAt: { $gte: oneMonthAgo },
     });
 
-    res.status(200).json({
+    res.status(200).json({success:true,msg:'all users',
       users: usersWithoutPassword,
       totalUsers,
       lastMonthUsers,
     });
   } catch (error) {
-    next(error);
+    console.log(`get all users failed ${error}`)
+    res.status(500).json({success:false,msg:'internal server error'})
+    // next(error);
   }
 };
 
