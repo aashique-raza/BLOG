@@ -108,4 +108,31 @@ const deletepost = async (req, res, next) => {
     }
   };
 
-export { createPost, getposts,deletepost };
+  const updatePost=async(req,res)=>{
+    if (!req.user.isAdmin || req.user.id !== req.params.userId) {
+      return res.status(403).json({success:false,msg:'You are not allowed to update this post'})
+      // return next(errorHandler(403, 'You are not allowed to update this post'));
+    }
+    try {
+      const updatedPost = await Post.findByIdAndUpdate(
+        req.params.postId,
+        {
+          $set: {
+            title: req.body.title,
+            content: req.body.content,
+            category: req.body.category,
+            image: req.body.image,
+          },
+        },
+        { new: true }
+      );
+      res.status(200).json({success:true,msg:"post updated",updatedPost});
+    } catch (error) {
+      console.log(`post updated failed ${error}`)
+      res.status(500).json({success:false,msg:'internal server error'})
+      // next(error);
+    }
+
+  }
+
+export { createPost, getposts,deletepost,updatePost };

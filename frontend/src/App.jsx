@@ -11,6 +11,7 @@ import Dashboard from "./pages/Dashboard";
 import Protected from "./components/Protected";
 import CreatePost from "./pages/CreatePost";
 import ProtectedAdmin from "./components/ProtectedAdmin";
+import UpdatePost from "./pages/UpdatePost";
 
 function App() {
   return (
@@ -28,6 +29,7 @@ function App() {
         </Route>
         <Route element={<ProtectedAdmin />}>
           <Route path="/create-post" element={<CreatePost />} />
+          <Route path="/update-post/:postId" element={<UpdatePost />} />
         </Route>
       </Routes>
       <FooterCom />
