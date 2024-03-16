@@ -12,6 +12,7 @@ import Protected from "./components/Protected";
 import CreatePost from "./pages/CreatePost";
 import ProtectedAdmin from "./components/ProtectedAdmin";
 import UpdatePost from "./pages/UpdatePost";
+import PostPage from "./pages/PostPage";
 
 function App() {
   return (
@@ -24,6 +25,8 @@ function App() {
 
         <Route path="/login" element={<Login />} />
         <Route path="/projects" element={<Projects />} />
+        <Route path='/post/:postSlug' element={<PostPage />} />
+
         <Route element={<Protected />}>
           <Route path="/dashboard" element={<Dashboard />} />
         </Route>
