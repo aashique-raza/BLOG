@@ -143,13 +143,13 @@ export default function DashProfile() {
         method: 'DELETE',
       });
       const data = await res.json();
-      console.log(data)
+      // console.log(data)
       if (data.success===false) {
        return dispatch(deleteUserFailure(data.msg));
       } 
         dispatch(deleteUserSuccess(null));
         // localStorage.removeItem('persist:root');
-        console.log('success kuy nhi chal rha hai')
+        // console.log('success kuy nhi chal rha hai')
       
     } catch (error) {
         console.log(`delete nhi ho rha hai is wjah se ${error} `)
