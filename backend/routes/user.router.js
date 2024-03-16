@@ -1,6 +1,6 @@
 
 import { Router } from "express";
-import { testApi,updateUser,deleteUser,logout,getUsers } from "../controllers/user.controller.js";
+import { testApi,updateUser,deleteUser,logout,getUsers,getUser } from "../controllers/user.controller.js";
 import verifyToken from "../utility/userVerify.js";
 
 
@@ -17,6 +17,7 @@ router.put('/update/:userId',verifyToken,updateUser)
 router.delete('/delete/:userId', verifyToken,deleteUser);
 router.post('/logout',logout);
 router.get('/getusers', verifyToken, getUsers);
+router.get('/:userId', getUser);
 
 
 export default router

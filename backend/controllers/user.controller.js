@@ -178,4 +178,20 @@ const getUsers = async (req, res, next) => {
 };
 
 
-export { testApi, updateUser,deleteUser,logout,getUsers };
+ const getUser = async (req, res, next) => {
+  try {
+    const user = await User.findById(req.params.userId);
+    if (!user) {
+      // return next(errorHandler(404, 'User not found'));
+      return res.status(404).json({success:false,msg:"user not found"})
+    }
+    const { password, ...rest } = user._doc;
+    res.status(200).json({success:true,msg:"found user",rest});
+  } catch (error) {
+    res.status(500).json({success:false,msg:"internal server error"})
+    // next(error);
+  }
+};
+
+
+export { testApi, updateUser,deleteUser,logout,getUsers,getUser };
