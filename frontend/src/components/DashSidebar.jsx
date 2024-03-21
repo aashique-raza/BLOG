@@ -62,6 +62,19 @@ export default function DashSidebar() {
               Profile
             </Sidebar.Item>
           </Link>
+          {
+            UserData.isAdmin && (
+              <Link to='/dashboard?tab=posts'>
+              <Sidebar.Item
+                active={tab === 'posts'}
+                icon={HiOutlineUserGroup}
+                as='div'
+              >
+                Posts
+              </Sidebar.Item>
+            </Link>
+            )
+          }
           {UserData.isAdmin && (
             <>
             <Link to='/dashboard?tab=users'>
