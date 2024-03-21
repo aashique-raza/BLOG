@@ -7,7 +7,7 @@ import { Button, Textarea } from 'flowbite-react';
 import { FaThumbsUp } from 'react-icons/fa';
 import { useSelector } from 'react-redux';
 
-function ShowComment({comment,onLike,onEdit  }) {
+function ShowComment({comment,onLike,onEdit,onDelete   }) {
   const { UserData } = useSelector((state) => state.user);
     const [user, setUser] = useState({});
     const[error,setCommentShowError]=useState(null)
@@ -136,13 +136,22 @@ function ShowComment({comment,onLike,onEdit  }) {
               </p>
               {UserData &&
                 (UserData._id === comment.userId || UserData.isAdmin) && (
-                  <button
-                    type='button'
-                    onClick={handleEdit}
-                    className='text-gray-400 hover:text-blue-500'
-                  >
-                    Edit
-                  </button>
+                  <>
+                    <button
+                      type='button'
+                      onClick={handleEdit}
+                      className='text-gray-400 hover:text-blue-500'
+                    >
+                      Edit
+                    </button>
+                    <button
+                      type='button'
+                      onClick={() => onDelete(comment._id)}
+                      className='text-gray-400 hover:text-red-500'
+                    >
+                      Delete
+                    </button>
+                  </>
                 )}
             </div>
           </>
